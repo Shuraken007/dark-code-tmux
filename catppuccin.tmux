@@ -28,7 +28,7 @@ setw() {
 
 main() {
   local theme
-  theme="$(get_tmux_option "@catppuccin_flavour" "mocha")"
+  theme="$(get_tmux_option "@catppuccin_flavour" "dark-code")"
 
   # Aggregate all commands in one array
   local tmux_commands=()
@@ -46,11 +46,11 @@ main() {
   set status-right-length "100"
 
   # messages
-  set message-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
-  set message-command-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
+  set message-style "fg=${thm_cyan},bg=${thm_bg},align=centre"
+  set message-command-style "fg=${thm_cyan},bg=${thm_bg},align=centre"
 
   # panes
-  set pane-border-style "fg=${thm_gray}"
+  set pane-border-style "fg=${thm_bg}"
   set pane-active-border-style "fg=${thm_blue}"
 
   # windows
@@ -111,34 +111,34 @@ main() {
 
   # These variables are the defaults so that the setw and set calls are easier to parse.
   local show_directory
-  readonly show_directory="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]$directory_icon  #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_red]"
+  readonly show_directory="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]$directory_icon  #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_orange]"
 
   local show_window
-  readonly show_window="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]$window_icon #[fg=$thm_fg,bg=$thm_gray] #W #{?client_prefix,#[fg=$thm_red]"
+  readonly show_window="#[fg=$thm_gray,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_gray,nobold,nounderscore,noitalics]$window_icon #[fg=$thm_fg,bg=$thm_bg] #W #{?client_prefix,#[fg=$thm_orange]"
 
   local show_session
-  readonly show_session="#[fg=$thm_green]}#[bg=$thm_gray]$right_separator#{?client_prefix,#[bg=$thm_red],#[bg=$thm_green]}#[fg=$thm_bg]$session_icon #[fg=$thm_fg,bg=$thm_gray] #S "
+  readonly show_session="#[fg=$thm_green]}#[bg=$thm_bg]$right_separator#{?client_prefix,#[bg=$thm_orange],#[bg=$thm_green]}#[fg=$thm_bg]$session_icon #[fg=$thm_fg,bg=$thm_bg] #S "
 
   local show_directory_in_window_status
-  readonly show_directory_in_window_status="#[fg=$thm_bg,bg=$thm_blue] #I #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} "
+  readonly show_directory_in_window_status="#[fg=$thm_bg,bg=$thm_gray] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} "
 
   local show_directory_in_window_status_current
-  readonly show_directory_in_window_status_current="#[fg=$thm_bg,bg=$thm_orange] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} "
+  readonly show_directory_in_window_status_current="#[fg=$thm_bg,bg=$thm_light_orange] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} "
 
   local show_window_in_window_status
   readonly show_window_in_window_status="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_blue] #I#[fg=$thm_blue,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
 
   local show_window_in_window_status_current
-  readonly show_window_in_window_status_current="#[fg=$thm_fg,bg=$thm_gray] #W #[fg=$thm_bg,bg=$thm_orange] #I#[fg=$thm_orange,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
+  readonly show_window_in_window_status_current="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_orange] #I#[fg=$thm_orange,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
 
   local show_user
-  readonly show_user="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_bg,bg=$thm_blue]$user_icon #[fg=$thm_fg,bg=$thm_gray] #(whoami) "
+  readonly show_user="#[fg=$thm_blue,bg=$thm_bg]$right_separator#[fg=$thm_bg,bg=$thm_blue]$user_icon #[fg=$thm_fg,bg=$thm_bg] #(whoami) "
 
   local show_host
-  readonly show_host="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_bg,bg=$thm_blue]$host_icon #[fg=$thm_fg,bg=$thm_gray] #H "
+  readonly show_host="#[fg=$thm_blue,bg=$thm_bg]$right_separator#[fg=$thm_bg,bg=$thm_blue]$host_icon #[fg=$thm_fg,bg=$thm_bg] #H "
 
   local show_date_time
-  readonly show_date_time="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_bg,bg=$thm_blue]$datetime_icon #[fg=$thm_fg,bg=$thm_gray] $date_time "
+  readonly show_date_time="#[fg=$thm_blue,bg=$thm_bg]$right_separator#[fg=$thm_bg,bg=$thm_blue]$datetime_icon #[fg=$thm_fg,bg=$thm_bg] $date_time "
 
   # Right column 1 by default shows the Window name.
   local right_column1=$show_window
@@ -180,7 +180,7 @@ main() {
   # --------=== Modes
   #
   setw clock-mode-colour "${thm_blue}"
-  setw mode-style "fg=${thm_pink} bg=${thm_black4} bold"
+  setw mode-style "fg=${thm_orange} bg=${thm_blue} bold"
 
   tmux "${tmux_commands[@]}"
 }
