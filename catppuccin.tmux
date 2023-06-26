@@ -109,6 +109,8 @@ main() {
   datetime_icon="$(get_tmux_option "@catppuccin_datetime_icon" "")"
   readonly datetime_icon
 
+  local speed="$(get_tmux_option "@catppuccin_speed" "on")"
+
   # These variables are the defaults so that the setw and set calls are easier to parse.
   local show_directory
   readonly show_directory="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]$directory_icon  #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_orange]"
@@ -140,6 +142,10 @@ main() {
   local show_date_time
   readonly show_date_time="#[fg=$thm_bg,bg=$thm_bg]$right_separator#[fg=$thm_fg,bg=$thm_bg]$datetime_icon #[fg=$thm_fg,bg=$thm_bg] $date_time "
 
+
+  local show_speed
+  readonly show_speed="#[fg=$thm_fg,bg=$thm_bg] #{net_speed} "
+
   # Right column 1 by default shows the Window name.
   local right_column1=$show_window
 
@@ -157,7 +163,11 @@ main() {
     window_status_format=$show_window_in_window_status
     window_status_current_format=$show_window_in_window_status_current
   fi
-
+echo "no"
+  if [[ "${speed}" == "on" ]]; then
+     echo "yes"
+    right_column2=$show_speed$right_column2
+  fi
   if [[ "${user}" == "on" ]]; then
     right_column2=$right_column2$show_user
   fi
