@@ -29,7 +29,6 @@ setw() {
 main() {
   local theme
   theme="$(get_tmux_option "@catppuccin_flavour" "dark-code")"
-
   # Aggregate all commands in one array
   local tmux_commands=()
 
@@ -142,7 +141,6 @@ main() {
   local show_date_time
   readonly show_date_time="#[fg=$thm_bg,bg=$thm_bg]$right_separator#[fg=$thm_fg,bg=$thm_bg]$datetime_icon #[fg=$thm_fg,bg=$thm_bg] $date_time "
 
-
   local show_speed
   readonly show_speed="#[fg=$thm_fg,bg=$thm_bg] #{net_speed} "
 
@@ -150,7 +148,8 @@ main() {
   local right_column1=$show_window
 
   # Right column 2 by default shows the current Session name.
-  local right_column2=$show_session
+  local right_column2=$show_speed$show_session
+  # local right_column2=$show_session
 
   # Window status by default shows the current directory basename.
   local window_status_format=$show_directory_in_window_status
@@ -163,11 +162,9 @@ main() {
     window_status_format=$show_window_in_window_status
     window_status_current_format=$show_window_in_window_status_current
   fi
-echo "no"
-  if [[ "${speed}" == "on" ]]; then
-     echo "yes"
-    right_column2=$show_speed$right_column2
-  fi
+  # if [[ "${speed}" == "on" ]]; then
+    # right_column2=$right_column2
+  # fi
   if [[ "${user}" == "on" ]]; then
     right_column2=$right_column2$show_user
   fi
