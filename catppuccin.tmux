@@ -29,6 +29,7 @@ setw() {
 main() {
   local theme
   theme="$(get_tmux_option "@catppuccin_flavour" "dark-code")"
+
   # Aggregate all commands in one array
   local tmux_commands=()
 
@@ -72,6 +73,10 @@ main() {
   left_separator="$(get_tmux_option "@catppuccin_left_separator" "")"
   readonly left_separator
 
+  local window
+  window="$(get_tmux_option "@catppuccin_window" "off")"
+  readonly window
+
   local user
   user="$(get_tmux_option "@catppuccin_user" "off")"
   readonly user
@@ -80,9 +85,17 @@ main() {
   user_icon="$(get_tmux_option "@catppuccin_user_icon" "")"
   readonly user_icon
 
+  local lang
+  lang="$(get_tmux_option "@catppuccin_lang" "off")"
+  readonly lang
+
   local host
   host="$(get_tmux_option "@catppuccin_host" "off")"
   readonly host
+
+  local speed
+  speed="$(get_tmux_option "@catppuccin_speed" "off")"
+  readonly speed
 
   local directory_icon
   directory_icon="$(get_tmux_option "@catppuccin_directory_icon" "")"
@@ -96,6 +109,10 @@ main() {
   session_icon="$(get_tmux_option "@catppuccin_session_icon" "")"
   readonly session_icon
 
+  local language_icon
+  language_icon="$(get_tmux_option "@catppuccin_language_icon" "󰗊")"
+  readonly language_icon
+
   local host_icon
   host_icon="$(get_tmux_option "@catppuccin_host_icon" "󰒋")"
   readonly host_icon
@@ -108,17 +125,28 @@ main() {
   datetime_icon="$(get_tmux_option "@catppuccin_datetime_icon" "")"
   readonly datetime_icon
 
-  local speed="$(get_tmux_option "@catppuccin_speed" "on")"
+  local dspeed_icon
+  dspeed_icon="$(get_tmux_option "@catppuccin_dspeed_icon" "D:")"
+  readonly dspeed_icon
 
   # These variables are the defaults so that the setw and set calls are easier to parse.
   local show_directory
-  readonly show_directory="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]$directory_icon  #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_orange]"
+  readonly show_directory="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]$directory_icon  #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_orange],#[fg=$thm_green]}"
 
   local show_window
-  readonly show_window="#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_fg,nobold,nounderscore,noitalics]$window_icon #[fg=$thm_fg,bg=$thm_bg] #W #{?client_prefix,#[fg=$thm_orange]"
+  readonly show_window="#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_fg,nobold,nounderscore,noitalics]$window_icon #[fg=$thm_fg,bg=$thm_bg] #W #{?client_prefix,#[fg=$thm_orange], #[fg=$thm_green]}"
 
   local show_session
-  readonly show_session="#[fg=$thm_green]}#[bg=$thm_bg]$right_separator#{?client_prefix,#[bg=$thm_orange],#[bg=$thm_green]}#[fg=$thm_bg]$session_icon #[fg=$thm_fg,bg=$thm_bg] #S "
+  local session_fg="#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_green]}#[bg=$thm_bg]"
+  local session_bg="#{?client_prefix,#[bg=$thm_orange],#[bg=$thm_green]}#[fg=$thm_bg]"
+
+  readonly show_session="$session_fg$right_separator$session_bg$session_icon #[fg=$thm_fg,bg=$thm_bg] #S "
+
+  local language="#(cat \$XDG_CACHE_HOME/windows_events/lang)"
+  local lang_fg_color="#{?#{==:$language,ru},#[fg=$thm_orange],#[fg=$thm_green]}"
+  local lang_bg_color="#{?#{==:$language,ru},#[bg=$thm_orange],#[bg=$thm_green]}"
+  local show_lang
+  readonly show_lang="$lang_fg_color#[bg=$thm_bg]$right_separator#[fg=$thm_bg]$lang_bg_color$language$lang_fg_color#[bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg] "
 
   local show_directory_in_window_status
   readonly show_directory_in_window_status="#[fg=$thm_bg,bg=$thm_fg] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} "
@@ -127,10 +155,10 @@ main() {
   readonly show_directory_in_window_status_current="#[fg=$thm_bg,bg=$thm_light_orange] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} "
 
   local show_window_in_window_status
-  readonly show_window_in_window_status="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_blue] #I#[fg=$thm_blue,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
+  readonly show_window_in_window_status="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_gray] #I#[fg=$thm_gray,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
 
   local show_window_in_window_status_current
-  readonly show_window_in_window_status_current="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_orange] #I#[fg=$thm_orange,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
+  readonly show_window_in_window_status_current="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_light_orange] #I#[fg=$thm_light_orange,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
 
   local show_user
   readonly show_user="#[fg=$thm_blue,bg=$thm_bg]$right_separator#[fg=$thm_bg,bg=$thm_blue]$user_icon #[fg=$thm_fg,bg=$thm_bg] #(whoami) "
@@ -142,14 +170,16 @@ main() {
   readonly show_date_time="#[fg=$thm_bg,bg=$thm_bg]$right_separator#[fg=$thm_fg,bg=$thm_bg]$datetime_icon #[fg=$thm_fg,bg=$thm_bg] $date_time "
 
   local show_speed
-  readonly show_speed="#[fg=$thm_fg,bg=$thm_bg] #{net_speed} "
+  readonly show_speed="#{?#{!=:#{download_speed},0 B/s},#[fg=$thm_green]#[bg=$thm_bg]$right_separator#[bg=$thm_green]#[fg=$thm_bg]$dspeed_icon #[fg=$thm_fg#,bg=$thm_bg] #{download_speed},}"
 
+  local right_column1
   # Right column 1 by default shows the Window name.
-  local right_column1=$show_window
+  if [[ "${window}" == "on" ]]; then
+    right_column1=$show_window
+  fi
 
   # Right column 2 by default shows the current Session name.
-  local right_column2=$show_speed$show_session
-  # local right_column2=$show_session
+  local right_column2=$show_session
 
   # Window status by default shows the current directory basename.
   local window_status_format=$show_directory_in_window_status
@@ -159,12 +189,14 @@ main() {
   # update the right_column1 and the window_status_* variables.
   if [[ "${wt_enabled}" == "on" ]]; then
     right_column1=$show_directory
-    window_status_format=$show_window_in_window_status
-    window_status_current_format=$show_window_in_window_status_current
+    window_status_format="#($PLUGIN_DIR/get_status.pl --window-status-format)"
+    window_status_current_format="#($PLUGIN_DIR/get_status.pl --window-status-current-format)"
   fi
-  # if [[ "${speed}" == "on" ]]; then
-    # right_column2=$right_column2
-  # fi
+
+  if [[ "${speed}" == "on" ]]; then
+    right_column1=$show_speed$right_column1
+  fi
+
   if [[ "${user}" == "on" ]]; then
     right_column2=$right_column2$show_user
   fi
@@ -173,16 +205,25 @@ main() {
     right_column2=$right_column2$show_host
   fi
 
+  if [[ "${lang}" == "on" ]]; then
+    right_column2=$show_lang$right_column2
+  fi
+
   if [[ "${date_time}" != "off" ]]; then
     right_column2=$right_column2$show_date_time
   fi
-
-  set status-left ""
-
-  set status-right "${right_column1},${right_column2}"
-
-  setw window-status-format "${window_status_format}"
-  setw window-status-current-format "${window_status_current_format}"
+  
+  # set length
+  # tmux set-option -g status-left-length 100
+  # tmux set-option -g status-right-length 100
+  set status-left "#($PLUGIN_DIR/get_status.pl --status-left)"
+  set status-right "#($PLUGIN_DIR/get_status.pl --status-right)"
+  # set status-right "${right_column1} ${right_column2}"
+  # set status-window "#($PLUGIN_DIR/get_status.pl --windows)"
+  # setw window-status-format "#($PLUGIN_DIR/get_status.pl --window-status-format)"
+  # setw window-status-current-format "#($PLUGIN_DIR/get_status.pl --window-status-current-format)"
+  setw window-status-format ""
+  setw window-status-current-format ""
 
   # --------=== Modes
   #
